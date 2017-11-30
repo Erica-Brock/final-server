@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
 import { procedure } from '../config/db/index';
-import procedures from '../procedures/job.proc';export 
+import procedures from '../procedures/job.proc';
 
-const create = (req: Request, res: Response, next: NextFunction) => {
+
+export const create = (req: Request, res: Response, next: NextFunction) => {
     procedures.create(+req.body.id)
         .then((sets) => {
             res.json(sets);
