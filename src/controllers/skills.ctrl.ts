@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
 import { procedure } from '../config/db/index';
-import procedures from '../procedures/job.proc';
+import procedures from '../procedures/skills.proc';
 
 
 export const create = (req: Request, res: Response, next: NextFunction) => {
-    procedures.create(+req.body.client_id, +req.body.provider_id, req.body.title, req.body.description)
+    procedures.create(req.body.skill)
         .then((sets) => {
             res.json(sets);
         });
@@ -27,14 +27,26 @@ export const destroy = (req: Request, res: Response, next: NextFunction) => {
             res.json(sets);
         });
 };
+export const deleteUserSkill= (req: Request, res: Response, next: NextFunction) => {
+    procedures.deleteUserSkill(+req.params.user_id, +req.body.skill_id)
+        .then((sets) => {
+            res.json(sets);
+        });
+};
 export const all = (req: Request, res: Response, next: NextFunction) => {
     procedures.all()
         .then((sets) => {
             res.json(sets);
         });
 };
-export const getImagesByJob = (req: Request, res: Response, next: NextFunction) => {
-    procedures.getImagesByJob(+req.body.job_id)
+export const getUserBySkills = (req: Request, res: Response, next: NextFunction) => {
+    procedures.getUserBySkills(+req.params.skill_id)
+        .then((sets) => {
+            res.json(sets);
+        });
+};
+export const insertUserSkill = (req: Request, res: Response, next: NextFunction) => {
+    procedures.insertUserSkill(+req.params.user_id, +req.body.skill_id)
         .then((sets) => {
             res.json(sets);
         });
