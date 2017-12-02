@@ -6,10 +6,10 @@ router
 
  .get('/', all)
  .get('/:id', read)
- .get('/jobs/posted/:client_id',getJobsByClient)
- .get('/jobs/accepted/:provider_id',getJobsByProvider)
- .get('/skills/:user_id',getSkillsByUser)
- .get('/images/:user_id',getImagesByUser)
+ .get('/jobs/posted/:id', getJobsByClient)
+ .get('/jobs/accepted/:id',getJobsByProvider)
+ .get('/skills/:id',getSkillsByUser)
+ .get('/images/:id',getImagesByUser)
  .post('/', create)
  .put('/:id', update)
  .delete('/:id', destroy);

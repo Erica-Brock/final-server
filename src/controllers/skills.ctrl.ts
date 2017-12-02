@@ -28,7 +28,7 @@ export const destroy = (req: Request, res: Response, next: NextFunction) => {
         });
 };
 export const deleteUserSkill= (req: Request, res: Response, next: NextFunction) => {
-    procedures.deleteUserSkill(+req.params.user_id, +req.body.skill_id)
+    procedures.deleteUserSkill(+req.params.id, +req.body.skill_id)
         .then((sets) => {
             res.json(sets);
         });
@@ -40,13 +40,13 @@ export const all = (req: Request, res: Response, next: NextFunction) => {
         });
 };
 export const getUserBySkills = (req: Request, res: Response, next: NextFunction) => {
-    procedures.getUserBySkills(+req.params.skill_id)
+    procedures.getUserBySkills(+req.params.id)
         .then((sets) => {
             res.json(sets);
         });
 };
 export const insertUserSkill = (req: Request, res: Response, next: NextFunction) => {
-    procedures.insertUserSkill(+req.params.user_id, +req.body.skill_id)
+    procedures.insertUserSkill(+req.params.id, +req.body.skill_id)
         .then((sets) => {
             res.json(sets);
         });

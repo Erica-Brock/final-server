@@ -4,7 +4,7 @@ import{ create, read, update, destroy, all, getImagesByJob } from '../controller
 const router= Router();
 router
  .get('/', all)
- .get('/images/:job_id',getImagesByJob)
+ .get('/images/:id', getImagesByJob)
  .get('/:id', read)
  .post('/', create)
  .put('/:id', update)

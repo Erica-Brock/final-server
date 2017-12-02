@@ -33,25 +33,25 @@ export const all = (req: Request, res: Response, next: NextFunction) => {
         });
 };
 export const getJobsByClient = (req: Request, res: Response, next: NextFunction) => {
-    procedures.getJobsByClient(+req.params.client_id)
+    procedures.getJobsByClient(+req.params.id)
         .then((sets) => {
             res.json(sets);
         });
 };
 export const getJobsByProvider = (req: Request, res: Response, next: NextFunction) => {
-    procedures.getJobsByProvider(+req.params.provider_id)
+    procedures.getJobsByProvider(+req.params.id)
         .then((sets) => {
             res.json(sets);
         });
 };
 export const getSkillsByUser = (req: Request, res: Response, next: NextFunction) => {
-    procedures.getSkillsByUser(+req.params.user_id)
+    procedures.getSkillsByUser(+req.params.id)
         .then((sets) => {
             res.json(sets);
         });
 };
 export const getImagesByUser = (req: Request, res: Response, next: NextFunction) => {
-    procedures.getImagesByUser(+req.params.user_id)
+    procedures.getImagesByUser(+req.params.id)
         .then((sets) => {
             res.json(sets);
         });

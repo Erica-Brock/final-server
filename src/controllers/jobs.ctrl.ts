@@ -34,7 +34,7 @@ export const all = (req: Request, res: Response, next: NextFunction) => {
         });
 };
 export const getImagesByJob = (req: Request, res: Response, next: NextFunction) => {
-    procedures.getImagesByJob(+req.body.job_id)
+    procedures.getImagesByJob(+req.params.id)
         .then((sets) => {
             res.json(sets);
         });

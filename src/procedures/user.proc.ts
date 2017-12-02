@@ -37,5 +37,6 @@ export default {
     all,
     getJobsByClient,
     getJobsByProvider,
-    getSkillsByUser
+    getSkillsByUser,
+    getImagesByUser
 }

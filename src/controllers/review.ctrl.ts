@@ -34,13 +34,13 @@ export const all = (req: Request, res: Response, next: NextFunction) => {
         });
 };
 export const allPoster = (req: Request, res: Response, next: NextFunction) => {
-    procedures.allPoster(+req.params.poster_id)
+    procedures.allPoster(+req.params.id)
         .then((sets) => {
             res.json(sets);
         });
 };
 export const allReceiver = (req: Request, res: Response, next: NextFunction) => {
-    procedures.allReceiver(+req.params.receiver_id)
+    procedures.allReceiver(+req.params.id)
         .then((sets) => {
             res.json(sets);
         });

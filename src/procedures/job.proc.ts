@@ -14,8 +14,8 @@ import { row, rows, empty } from './base.proc';
     const all = ()=>{
         return rows('spGetJobs');
     };
-    const getImagesByJob = (job_id:number)=>{
-        return rows('spGetImagesByJob', [job_id]);
+    const getImagesByJob = (id:number)=>{
+        return rows('spGetImagesByJob', [id]);
     };
 
 export default {
