@@ -2,15 +2,22 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const auth_proc_1 = require("../procedures/auth.proc");
 const lodash_1 = require("lodash");
-const bcrypt_1 = require("../middleware/bcrypt");
 exports.login = (req, res, next) => {
     auth_proc_1.default.login(req.body.email)
         .then((user) => {
-        if (lodash_1.isNil(user) || !bcrypt_1.comparePassword(user.password, req.body.password)) {
-            throw new Error();
+        console.log('user', user);
+        if (lodash_1.isNil(user)) {
+            throw new Error('User was not found');
+        }
+        if (user.password !== req.body.password) {
+            throw new Error('Password does not match');
         }
         req.session.userid = user.id;
+        console.log(req.session);
         delete user.password;
         res.send(user);
     });
+};
+exports.test = (req, res, next) => {
+    console.log(req.session);
 };

@@ -12,13 +12,13 @@ app
     // .get('/*', (req: express.Request, res: express.Response) => {
     //     res.sendFile(path.join(__dirname + '/../dist/index.html'));
     // });
+    .use(bodyParser.json())
     .use(sessions({
-        cookieName:'session',
+        cookieName: 'session',
         duration: 1000 * 60 * 30,
         activeDuration: 1000 * 60 * 5,
         secret: <string>process.env.SESSION_SECRET
     }))
-    .use(bodyParser.json())
     .use('/api', api);
 
 app.listen(process.env.PORT || 3000, () => {
