@@ -28,7 +28,11 @@ exports.destroy = (req, res, next) => {
 exports.all = (req, res, next) => {
     user_proc_1.default.all()
         .then((sets) => {
-        res.json(sets);
+        const result = sets.map((s) => {
+            s.skills = s.skills.split(',');
+            return s;
+        });
+        res.json(result);
     });
 };
 exports.getJobsByClient = (req, res, next) => {

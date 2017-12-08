@@ -18,6 +18,3 @@ exports.login = (req, res, next) => {
         res.send(user);
     });
 };
-exports.test = (req, res, next) => {
-    console.log(req.session);
-};

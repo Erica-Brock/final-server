@@ -29,7 +29,12 @@ export const destroy = (req: Request, res: Response, next: NextFunction) => {
 export const all = (req: Request, res: Response, next: NextFunction) => {
     procedures.all()
         .then((sets) => {
-            res.json(sets);
+            const result = sets.map((s) => {
+               s.skills = s.skills.split(',')
+                return s;
+            })
+
+            res.json(result);
         });
 };
 export const getJobsByClient = (req: Request, res: Response, next: NextFunction) => {
