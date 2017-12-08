@@ -3,10 +3,10 @@ import{create, read, update, destroy, all, allPoster, allReceiver } from '../con
 
 const router = Router();
 router
-    .get('/', read)
-    .get('/:id', all)
+    .get('/', all)
+    .get('/:id', read)
     .get('/poster/:id', allPoster)
-    .get('/reciever/:id',allReceiver)
+    .get('/receiver/:id',allReceiver)
     .post('/', create)
     .put('/', update)
     .delete('/', destroy);
