@@ -5,7 +5,66 @@ const api_1 = require("./routers/api");
 const bodyParser = require("body-parser");
 const db_1 = require("./config/db");
 const sessions = require("client-sessions");
+const algoliasearch = require("algoliasearch");
+const http_1 = require("http");
+const socket = require("socket.io");
+const index_1 = require("./config/db/index");
+exports.client = algoliasearch("NGFATQMT4B", "3c9872f8338b96966a9dab158cc77e70");
+// CHANGE INDEX TO "FinalJobs" WHEN USING THESE FUNCTIONS FOR JOBS AND TO "FinalUsers" FOR USERS
+const index = exports.client.initIndex('FinalUsers');
 const app = express();
+const server = http_1.createServer(app);
+const io = socket.listen(server);
+app.use(bodyParser.json());
+io.on('connection', (socket) => {
+    console.log('user connected');
+    socket.on('disconnect', function () {
+        console.log('user disconnected');
+    });
+    socket.on('add-message', (message) => {
+        console.log(message);
+        index_1.procedure('spInsertMessage', [message.user_id, message.chat_id, message.message])
+            .then((pack) => {
+            console.log("Inside whatever", pack);
+            io.emit('message', pack[0][0]);
+            socket.broadcast.emit('message', pack[0][0]);
+        });
+    });
+});
+// I AM GOING TO IMPORT THE GETS HERE FOR THE INDEX DATABASE FOR THE INSTANT SEARCH AND ALSO FOR THE CHAT ROOM
+// AS OF NOW I DO NOT HAVE TIME TO ROUTE THEM ALL OUT AND MAKE CONTROLLERS OR PROCEDURES FOR THEM ALL 
+//CHATROOM FUNCTIONS
+app.get("/api/chat/rooms/:id", (req, res, next) => {
+    index_1.procedure("spGetChatroomsByUser", [+req.params.id])
+        .then((chatrooms) => {
+        res.json(chatrooms[0]);
+        console.log(chatrooms[0]);
+    });
+});
+app.get("/api/chat/messages/:id", (req, res, next) => {
+    index_1.procedure("spGetMessagesByChatroom", [+req.params.id])
+        .then((messages) => {
+        res.json(messages[0]);
+        console.log(messages[0]);
+    });
+});
+//USE THIS FUNCTION INCASE YOU NEED TO CLEAR THE INDEX AND RE PUSH ALL OF THE USERS OR JOBS
+//YOU WILL HAVE TO CHANGE THE INDEX NAME TO 'FinalJobs' OR 'FinalUsers' DEPENDING ON WHICH ONE YOU ARE PUSHING 
+//AND AS OF NOW I HAVE THOSE IN THE COROSPONDING CONTROLLING FOLDERS
+// app.post('/', (req: express.Request, res: express.Response, next: express.NextFunction) => {
+//     index.addObject(req.body, (err, content) => {
+//         console.log(content)
+//         procedure("spInsertUser", [req.body.name, req.body.password, req.body.email, req.body.city, req.body.state, req.body.phone, req.body.bio, req.body.img, content.objectID])
+//         .then((id: any) => {
+//             console.log(id[0][0].id)
+//             index.partialUpdateObject({
+//                 id: id[0][0].id,
+//                 objectID: content.objectID
+//             })
+//         })
+//     })   
+// })
+//UNTOUCHED SERVER BELOW
 app
     .use(bodyParser.json())
     .use(sessions({
@@ -15,7 +74,7 @@ app
     secret: process.env.SESSION_SECRET
 }))
     .use('/api', api_1.default);
-app.listen(process.env.PORT || 3000, () => {
+server.listen(process.env.PORT || 3000, () => {
     db_1.default();
     console.log(`listening on port ${process.env.PORT || 3000}`);
 });
