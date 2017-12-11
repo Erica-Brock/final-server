@@ -6,7 +6,6 @@ import {comparePassword} from '../middleware/bcrypt'
 export const login = (req: Request, res: Response, next: NextFunction) => {
     procedures.login(req.body.email)
         .then((user) => {
-            console.log('user', user);
           if(isNil(user)) {
               throw new Error('User was not found');
           } 
@@ -25,3 +24,13 @@ export const login = (req: Request, res: Response, next: NextFunction) => {
         });
 };
 
+export const refresh = (req: Request, res: Response, next: NextFunction) => {
+    if (!req.session || !req.session.userid) {
+        throw new Error('you must login cause you have no session');
+    }
+
+    procedures.refresh(req.session.userid)
+        .then((userPacket) => {
+            res.json(userPacket);
+        });
+};
