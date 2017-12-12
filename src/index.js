@@ -5,13 +5,9 @@ const api_1 = require("./routers/api");
 const bodyParser = require("body-parser");
 const db_1 = require("./config/db");
 const sessions = require("client-sessions");
-const algoliasearch = require("algoliasearch");
 const http_1 = require("http");
 const socket = require("socket.io");
 const index_1 = require("./config/db/index");
-exports.client = algoliasearch("NGFATQMT4B", "3c9872f8338b96966a9dab158cc77e70");
-// CHANGE INDEX TO "FinalJobs" WHEN USING THESE FUNCTIONS FOR JOBS AND TO "FinalUsers" FOR USERS
-const index = exports.client.initIndex('FinalUsers');
 const app = express();
 const server = http_1.createServer(app);
 const io = socket.listen(server);
@@ -48,23 +44,6 @@ app.get("/api/chat/messages/:id", (req, res, next) => {
         console.log(messages[0]);
     });
 });
-//USE THIS FUNCTION INCASE YOU NEED TO CLEAR THE INDEX AND RE PUSH ALL OF THE USERS OR JOBS
-//YOU WILL HAVE TO CHANGE THE INDEX NAME TO 'FinalJobs' OR 'FinalUsers' DEPENDING ON WHICH ONE YOU ARE PUSHING 
-//AND AS OF NOW I HAVE THOSE IN THE COROSPONDING CONTROLLING FOLDERS
-// app.post('/', (req: express.Request, res: express.Response, next: express.NextFunction) => {
-//     index.addObject(req.body, (err, content) => {
-//         console.log(content)
-//         procedure("spInsertUser", [req.body.name, req.body.password, req.body.email, req.body.city, req.body.state, req.body.phone, req.body.bio, req.body.img, content.objectID])
-//         .then((id: any) => {
-//             console.log(id[0][0].id)
-//             index.partialUpdateObject({
-//                 id: id[0][0].id,
-//                 objectID: content.objectID
-//             })
-//         })
-//     })   
-// })
-//UNTOUCHED SERVER BELOW
 app
     .use(bodyParser.json())
     .use(sessions({

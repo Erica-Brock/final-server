@@ -1,28 +1,13 @@
 import { NextFunction, Request, Response } from 'express';
 import { procedure } from '../config/db/index';
 import procedures from '../procedures/job.proc';
-// import { client } from "../index";
-import * as algoliasearch from "algoliasearch";
-const client = algoliasearch("NGFATQMT4B", "3c9872f8338b96966a9dab158cc77e70");
+import { algoliaJobsIndex } from '../middleware/algolia.mw';
 
-
-const index = client.initIndex('FinalJobs');
-
-
-// EDITED TO CREATE A JOB AND INSERT IT INTO SQL AND THE ALGOLIA INDEX
 export const create = (req: Request, res: Response, next: NextFunction) => {
-    index.addObject(req.body, (err, content) => {
-        console.log(content)
-        procedure("spInsertJob", [req.body.client_id, req.body.provider_id, req.body.title, req.body.description, req.body.location, req.body.status])
-        .then((id: any) => {
-            console.log(id[0][0].id)
-
-            index.partialUpdateObject({
-                id: id[0][0].id,
-                objectID: content.objectID
-            })
-        })
-    })   
+    procedures.create(req.body.client_id, req.body.provider_id, req.body.title, req.body.description, req.body.location, req.body.isAccepted, req.body.isCompleted)
+        .then((job: any) => {
+            algoliaJobsIndex.add(job);;
+        });
 };
 
 export const read = (req: Request, res: Response, next: NextFunction) => {
@@ -32,39 +17,43 @@ export const read = (req: Request, res: Response, next: NextFunction) => {
         });
 };
 
-//EDITED TO UPDATE A JOB AND INSERT IT INTO THE INDEX AND THE SQL DATABASE
 export const update = (req: Request, res: Response, next: NextFunction) => {
-    procedure("spUpdateJob", [req.body.client_id, req.body.provider_id, req.body.title, req.body.description, req.body.location, req.body.status] )
-    .then((user:any) => {
-        res.json(user);
-        procedure("spGetJob", [+req.params.id])
-        .then((user: any) => {
-            console.log(user[0][0])
-            index.saveObject({
-                ...user[0][0],
-                 objectID: user[0][0].index_id 
-                }, (err, content) => {
-                console.log(content)
-            })
+    const promises = [
+        procedures.update(
+            req.params.id,
+            req.body.client_id,
+            req.body.provider_id, 
+            req.body.title, 
+            req.body.description, 
+            req.body.location, 
+            req.body.isAccepted, 
+            req.body.isCompleted
+        ),
+        algoliaJobsIndex.partialUpdate({
+            ...req.body,
+            objectID: req.params.id
         })
-    })
-};
-//EDITED TO DESTROY A JOB IN THE SQL AND IN THE INDEX
-export const destroy = (req: Request, res: Response, next: NextFunction) => {
-    procedure("spGetJob", [+req.params.id])
-    .then((job: any) => {
-        console.log(job[0][0])
-        index.deleteObject(job[0][0].index_id, (err) => {
-            if (!err) {
-              console.log('success');
-            }
-        });
+    ]
 
-        procedure("spDeleteJob", [+job[0][0].id])
-        .then((res) => {
-            console.log('deleted')
+    Promise.all(<any>promises)
+        .then((results: any) => {
+            console.log(results);
         })
-    })
+        .catch((err) => {
+            console.log(err);
+        });
+};
+
+export const destroy = (req: Request, res: Response, next: NextFunction) => {
+    const promises = [
+        procedures.destroy(+req.params.id),
+        algoliaJobsIndex.delete(req.params.id)
+    ];
+    
+    Promise.all(<any>promises)
+        .then((results: Array<any>) => {
+            res.end();
+        });
 };
 
 export const all = (req: Request, res: Response, next: NextFunction) => {
@@ -77,5 +66,24 @@ export const getImagesByJob = (req: Request, res: Response, next: NextFunction) 
     procedures.getImagesByJob(+req.params.id)
         .then((sets) => {
             res.json(sets);
+        });
+};
+
+export const book = (req: Request, res: Response, next: NextFunction) => {
+    procedures.book(+req.body.id, +req.body.provider_id)
+        .then((job) => {
+            console.log(job);
+           
+        });
+};
+
+export const refresh = (req: Request, res: Response, next: NextFunction) => {
+    procedures.all()
+        .then((jobs) => {
+            algoliaJobsIndex.refresh(jobs)
+                .then((ids) => {
+                    console.log('updated all jobs in algolia');
+                    res.end();
+                });
         });
 };
