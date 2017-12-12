@@ -6,7 +6,9 @@ exports.create = (req, res, next) => {
     job_proc_1.default.create(req.body.client_id, req.body.provider_id, req.body.title, req.body.description, req.body.location, req.body.isAccepted, req.body.isCompleted)
         .then((job) => {
         algolia_mw_1.algoliaJobsIndex.add(job);
-        ;
+        res.json({
+            id: job.id
+        });
     });
 };
 exports.read = (req, res, next) => {

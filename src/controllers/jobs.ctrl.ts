@@ -6,7 +6,10 @@ import { algoliaJobsIndex } from '../middleware/algolia.mw';
 export const create = (req: Request, res: Response, next: NextFunction) => {
     procedures.create(req.body.client_id, req.body.provider_id, req.body.title, req.body.description, req.body.location, req.body.isAccepted, req.body.isCompleted)
         .then((job: any) => {
-            algoliaJobsIndex.add(job);;
+            algoliaJobsIndex.add(job);
+            res.json({
+                id: job.id
+            });
         });
 };
 
