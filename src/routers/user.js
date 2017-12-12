@@ -9,6 +9,7 @@ router
     .get('/jobs/accepted/:id', users_ctrl_1.getJobsByProvider)
     .get('/skills/:id', users_ctrl_1.getSkillsByUser)
     .get('/images/:id', users_ctrl_1.getImagesByUser)
+    .get('/refreshIndex', users_ctrl_1.refresh)
     .get('/:id', users_ctrl_1.read)
     .post('/', users_ctrl_1.create)
     .put('/:id', users_ctrl_1.update)

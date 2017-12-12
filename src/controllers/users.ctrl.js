@@ -2,35 +2,22 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const index_1 = require("../config/db/index");
 const user_proc_1 = require("../procedures/user.proc");
-// import { client } from "../index";
-const algoliasearch = require("algoliasearch");
-const client = algoliasearch("NGFATQMT4B", "3c9872f8338b96966a9dab158cc77e70");
-const index = client.initIndex('FinalUsers');
-// EDIITED SO WHEN YOU CREATE A USER, IT GRABS THE SKILL IDS FROM THE BODY AND CREATES THE USERS SKILLS
-//IN THE USERSKILLS TABLE
+const algolia_mw_1 = require("../middleware/algolia.mw");
+const lodash_1 = require("lodash");
 exports.create = (req, res, next) => {
     index_1.procedure("spInsertUser", [req.body.name, req.body.password, req.body.email, req.body.city, req.body.state, req.body.phone, req.body.bio, req.body.img, req.body.index_id])
         .then((id) => {
-        console.log(id[0][0].id);
+        const userId = id[0][0].id;
         const skillIDs = req.body.skills;
-        const skillPromises = skillIDs.map((s) => {
-            return index_1.procedure("spInsertUserskill", [id[0][0].id, s]);
+        const promises = [];
+        skillIDs.forEach((s) => {
+            promises.push(index_1.procedure("spInsertUserskill", [userId, s]));
         });
-        Promise.all(skillPromises)
+        promises.push(algolia_mw_1.algoliaUsersIndex.add(Object.assign({}, req.body, { objectID: userId })));
+        Promise.all(promises)
             .then(() => {
             res.end();
         });
-        // index.addObject(req.body, (err, content) => {
-        //     console.log(content)
-        //     procedure("spInsertUser", [req.body.name, req.body.password, req.body.email, req.body.city, req.body.state, req.body.phone, req.body.bio, req.body.img, content.objectID])
-        //     .then((id: any) => {
-        //         console.log(id[0][0].id)
-        //         index.partialUpdateObject({
-        //             id: id[0][0].id,
-        //             objectID: content.objectID
-        //         })
-        //     })
-        // })   
     });
 };
 exports.read = (req, res, next) => {
@@ -39,34 +26,29 @@ exports.read = (req, res, next) => {
         res.json(sets);
     });
 };
-//EDITED TO UPDATE A USER AND INSERT IT INTO THE INDEX AND THE SQL DATABASE
 exports.update = (req, res, next) => {
-    index_1.procedure("spUpdateUser", [+req.params.id, req.body.name, req.body.password, req.body.email, req.body.city, req.body.state, req.body.phone, req.body.bio, req.body.img])
-        .then((user) => {
-        res.json(user);
-        index_1.procedure("spGetUser", [+req.params.id])
-            .then((user) => {
-            console.log(user[0][0]);
-            index.saveObject(Object.assign({}, user[0][0], { objectID: user[0][0].index_id }), (err, content) => {
-                console.log(content);
-            });
-        });
+    const algoliaUser = lodash_1.clone(req.body);
+    delete algoliaUser.password;
+    const promises = [
+        user_proc_1.default.update(req.params.id, req.body.name, req.body.password, req.body.email, req.body.city, req.body.state, req.body.phone, req.body.bio, req.body.image),
+        algolia_mw_1.algoliaUsersIndex.partialUpdate(Object.assign({}, algoliaUser, { objectID: algoliaUser.id }))
+    ];
+    Promise.all(promises)
+        .then((results) => {
+        console.log(results);
+    })
+        .catch((err) => {
+        console.log(err);
     });
 };
-//EDITED TO DESTROY A USER IN THE SQL AND IN THE INDEX
 exports.destroy = (req, res, next) => {
-    index_1.procedure("spGetUser", [+req.params.id])
-        .then((user) => {
-        console.log(user[0][0]);
-        index.deleteObject(user[0][0].index_id, (err) => {
-            if (!err) {
-                console.log('success');
-            }
-        });
-        index_1.procedure("spDeleteUser", [+user[0][0].id])
-            .then((res) => {
-            console.log('deleted');
-        });
+    const promises = [
+        user_proc_1.default.destroy(+req.params.id),
+        algolia_mw_1.algoliaUsersIndex.delete(req.params.id)
+    ];
+    Promise.all(promises)
+        .then((results) => {
+        res.end();
     });
 };
 exports.all = (req, res, next) => {
@@ -101,5 +83,15 @@ exports.getImagesByUser = (req, res, next) => {
     user_proc_1.default.getImagesByUser(+req.params.id)
         .then((sets) => {
         res.json(sets);
+    });
+};
+exports.refresh = (req, res, next) => {
+    user_proc_1.default.all()
+        .then((users) => {
+        algolia_mw_1.algoliaUsersIndex.refresh(users)
+            .then((ids) => {
+            console.log('updated all users in algolia');
+            res.end();
+        });
     });
 };
