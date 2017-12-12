@@ -25,6 +25,7 @@ exports.update = (req, res, next) => {
     Promise.all(promises)
         .then((results) => {
         console.log(results);
+        res.end();
     })
         .catch((err) => {
         console.log(err);
