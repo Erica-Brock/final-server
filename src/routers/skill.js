@@ -8,8 +8,8 @@ router
     .get('/:id', skills_ctrl_1.read)
     .get('/user/:id', skills_ctrl_1.getUserBySkills)
     .post('/', skills_ctrl_1.create)
+    .post('/skill/:id', skills_ctrl_1.deleteUserSkill)
     .post('/:id', skills_ctrl_1.insertUserSkill)
     .put('/:id', skills_ctrl_1.update)
-    .delete('/:id', skills_ctrl_1.destroy)
-    .delete('/skill/:id', skills_ctrl_1.deleteUserSkill);
+    .delete('/:id', skills_ctrl_1.destroy);
 exports.default = router;
