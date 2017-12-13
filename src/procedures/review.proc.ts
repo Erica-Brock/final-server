@@ -1,7 +1,7 @@
 import { row, rows, empty } from './base.proc';
 
-const create = (clientId: number, providerId: number, rating: number, review: string) => {
-    return row('spInsertReview', [clientId, providerId, rating, review]);
+const create = (client_id: number, provider_id: number, rating: number, review: string) => {
+    return row('spInsertReview', [client_id, provider_id, rating, review]);
 };
 const read = (id: number) => {
     return row('spGetReview', [id]);
