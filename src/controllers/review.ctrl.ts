@@ -4,7 +4,7 @@ import procedures from '../procedures/review.proc';
 
 
 export const create = (req: Request, res: Response, next: NextFunction) => {
-    procedures.create(req.body.client_id, req.body.provider_id, +req.body.rating, req.body.review)
+    procedures.create(req.body.client_id, req.body.job_id, req.body.provider_id, +req.body.rating, req.body.review)
         .then((set) => {
             res.json(set);
         });
