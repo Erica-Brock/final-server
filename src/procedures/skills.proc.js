@@ -23,6 +23,7 @@ const getUserBySkills = (user_id) => {
     return base_proc_1.row('spGetUserBySkills', [user_id]);
 };
 const insertUserSkill = (user_id, skill_id) => {
+    console.log(user_id, skill_id);
     return base_proc_1.row('spInsertUserskill', [+user_id, +skill_id]);
 };
 exports.default = {

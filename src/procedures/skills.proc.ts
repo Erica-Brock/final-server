@@ -21,6 +21,7 @@ const getUserBySkills = (user_id:number)=>{
     return row('spGetUserBySkills',[user_id]);
 };
 const insertUserSkill = (user_id:number, skill_id:number)=> {
+    console.log(user_id, skill_id)
     return row('spInsertUserskill', [+user_id, +skill_id]);
 };
 

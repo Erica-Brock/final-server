@@ -46,8 +46,7 @@ export const getUserBySkills = (req: Request, res: Response, next: NextFunction)
         });
 };
 export const insertUserSkill = (req: Request, res: Response, next: NextFunction) => {
-    console.log(req.params.id, req.body.skill_id);
-    procedures.insertUserSkill(+req.params.user_id, +req.body.skill_id)
+    procedures.insertUserSkill(+req.params.id, +req.body.skill_id)
         .then((sets) => {
             console.log(sets);
             res.json(sets);
