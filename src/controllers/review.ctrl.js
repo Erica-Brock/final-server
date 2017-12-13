@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const review_proc_1 = require("../procedures/review.proc");
 exports.create = (req, res, next) => {
-    review_proc_1.default.create(req.body.clientId, req.body.providerId, +req.body.rating, req.body.review)
+    review_proc_1.default.create(req.body.client_id, req.body.job_id, req.body.provider_id, +req.body.rating, req.body.review)
         .then((set) => {
         res.json(set);
     });

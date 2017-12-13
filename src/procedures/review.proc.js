@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const base_proc_1 = require("./base.proc");
-const create = (clientId, providerId, rating, review) => {
-    return base_proc_1.row('spInsertReview', [clientId, providerId, rating, review]);
+const create = (client_id, job_id, provider_id, rating, review) => {
+    return base_proc_1.row('spInsertReview', [client_id, job_id, provider_id, rating, review]);
 };
 const read = (id) => {
     return base_proc_1.row('spGetReview', [id]);
