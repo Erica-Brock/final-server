@@ -59,6 +59,7 @@ export const update = (req: Request, res: Response, next: NextFunction) => {
     Promise.all(<any>promises)
         .then((results: any) => {
             console.log(results);
+            res.end();
         })
         .catch((err) => {
             console.log(err);
