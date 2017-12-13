@@ -28,6 +28,10 @@ const book = (id: number, provider_id: number) => {
     return row('spBookJob', [id, provider_id]);
 };
 
+const complete = (id: number) => {
+    return empty('spCompleteJob', [id]);
+};
+
 export default {
     create,
     read,
@@ -35,5 +39,6 @@ export default {
     destroy,
     all,
     getImagesByJob,
-    book
+    book,
+    complete
 }

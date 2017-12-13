@@ -10,6 +10,7 @@ router
     .get('/:id', jobs_ctrl_1.read)
     .post('/', jobs_ctrl_1.create)
     .put('/book', jobs_ctrl_1.book)
+    .put('/complete/:id', jobs_ctrl_1.complete)
     .put('/:id', jobs_ctrl_1.update)
     .delete('/:id', jobs_ctrl_1.destroy);
 exports.default = router;

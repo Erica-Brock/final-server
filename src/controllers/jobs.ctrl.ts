@@ -91,3 +91,10 @@ export const refresh = (req: Request, res: Response, next: NextFunction) => {
                 });
         });
 };
+
+export const complete = (req: Request, res: Response, next: NextFunction) => {
+    procedures.complete(+req.params.id)
+        .then(() => {
+            res.end();
+        });
+};  

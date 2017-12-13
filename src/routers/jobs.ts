@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import{ create, read, update, destroy, all, getImagesByJob, book, refresh } from '../controllers/jobs.ctrl'
+import{ create, read, update, destroy, all, getImagesByJob, book, refresh, complete } from '../controllers/jobs.ctrl'
 
 const router= Router();
 router
@@ -9,6 +9,7 @@ router
  .get('/:id', read)
  .post('/', create)
  .put('/book', book) 
+ .put('/complete/:id', complete)
  .put('/:id', update)
  .delete('/:id', destroy);
 

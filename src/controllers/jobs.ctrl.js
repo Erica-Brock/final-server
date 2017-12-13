@@ -69,3 +69,9 @@ exports.refresh = (req, res, next) => {
         });
     });
 };
+exports.complete = (req, res, next) => {
+    job_proc_1.default.complete(+req.params.id)
+        .then(() => {
+        res.end();
+    });
+};

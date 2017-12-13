@@ -22,6 +22,9 @@ const getImagesByJob = (id) => {
 const book = (id, provider_id) => {
     return base_proc_1.row('spBookJob', [id, provider_id]);
 };
+const complete = (id) => {
+    return base_proc_1.empty('spCompleteJob', [id]);
+};
 exports.default = {
     create,
     read,
@@ -29,5 +32,6 @@ exports.default = {
     destroy,
     all,
     getImagesByJob,
-    book
+    book,
+    complete
 };
