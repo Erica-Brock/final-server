@@ -4,9 +4,9 @@ import procedures from '../procedures/review.proc';
 
 
 export const create = (req: Request, res: Response, next: NextFunction) => {
-    procedures.create(req.body.poster, req.body.receiver, req.body.review)
-        .then((sets) => {
-            res.json(sets);
+    procedures.create(req.body.clientId, req.body.providerId, +req.body.rating, req.body.review)
+        .then((set) => {
+            res.json(set);
         });
 };
 export const read = (req: Request, res: Response, next: NextFunction) => {
@@ -33,14 +33,21 @@ export const all = (req: Request, res: Response, next: NextFunction) => {
             res.json(sets);
         });
 };
-export const allPoster = (req: Request, res: Response, next: NextFunction) => {
-    procedures.allPoster(+req.params.id)
+export const allByProvider = (req: Request, res: Response, next: NextFunction) => {
+    procedures.allByProvider(+req.params.id)
         .then((sets) => {
             res.json(sets);
         });
 };
 export const allReceiver = (req: Request, res: Response, next: NextFunction) => {
     procedures.allReceiver(+req.params.id)
+        .then((sets) => {
+            res.json(sets);
+        });
+};
+
+export const allByJob = (req: Request, res: Response, next: NextFunction) => {
+    procedures.allByJob(+req.params.id)
         .then((sets) => {
             res.json(sets);
         });
