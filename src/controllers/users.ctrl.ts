@@ -5,7 +5,7 @@ import { algoliaUsersIndex, algoliaJobsIndex } from '../middleware/algolia.mw';
 import { clone } from 'lodash';
 
 export const create = (req: Request, res: Response, next: NextFunction) => {
-    procedure("spInsertUser", [req.body.name, req.body.password, req.body.email, req.body.city, req.body.state, req.body.phone, req.body.bio, req.body.img, req.body.index_id])
+    procedures.create(req.body.name, req.body.password, req.body.email, req.body.city, req.body.state, req.body.phone, req.body.bio, req.body.img)
         .then((id) => {
             const userId = id[0][0].id;
             const skillIDs = req.body.skills;
@@ -58,11 +58,9 @@ export const update = (req: Request, res: Response, next: NextFunction) => {
 
     Promise.all(<any>promises)
         .then((results: any) => {
-            console.log(results);
             res.end();
         })
         .catch((err) => {
-            console.log(err);
         });
 };
 
@@ -118,7 +116,6 @@ export const refresh = (req: Request, res: Response, next: NextFunction) => {
         .then((users) => {
             algoliaUsersIndex.refresh(users)
                 .then((ids) => {
-                    console.log('updated all users in algolia');
                     res.end();
                 });
         });

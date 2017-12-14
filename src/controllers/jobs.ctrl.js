@@ -24,11 +24,9 @@ exports.update = (req, res, next) => {
     ];
     Promise.all(promises)
         .then((results) => {
-        console.log(results);
         res.end();
     })
         .catch((err) => {
-        console.log(err);
     });
 };
 exports.destroy = (req, res, next) => {
@@ -56,7 +54,7 @@ exports.getImagesByJob = (req, res, next) => {
 exports.book = (req, res, next) => {
     job_proc_1.default.book(+req.body.id, +req.body.provider_id)
         .then((job) => {
-        console.log(job);
+        res.end();
     });
 };
 exports.refresh = (req, res, next) => {
@@ -64,7 +62,6 @@ exports.refresh = (req, res, next) => {
         .then((jobs) => {
         algolia_mw_1.algoliaJobsIndex.refresh(jobs)
             .then((ids) => {
-            console.log('updated all jobs in algolia');
             res.end();
         });
     });

@@ -1,10 +1,10 @@
 import {NextFunction, Response, Request} from 'express';
 import { row, rows, empty } from './base.proc';
-    const create = (id:number, name: string, password: string, email: string, city: string, state: string, phone: string, bio: string, img: string )=>{
-        return row('spInsertUser',[id, name, password, email, city, state, phone, bio, img]);
+    const create = (name: string, password: string, email: string, city: string, state: string, phone: string, bio: string, img: string )=>{
+        return row('spInsertUser', [name, password, email, city, state, phone, bio, img]);
     };
     const read = (id:number)=>{
-        return row('spGetUser',[id]);
+        return row('spGetUser', [id]);
     };
     const update = (id:number, name: string, password: string, email: string, city: string, state: string, phone: string, bio: string, img: string )=>{
         return empty('spUpdateUser', [id, name, password, email, city, state, phone, bio, img]);
@@ -27,7 +27,6 @@ import { row, rows, empty } from './base.proc';
     const getImagesByUser= (user_id:number)=>{
         return rows('spGetImagesByUser',[user_id]);
     };
-
 
 export default {
     create,

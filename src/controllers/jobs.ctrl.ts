@@ -40,11 +40,9 @@ export const update = (req: Request, res: Response, next: NextFunction) => {
 
     Promise.all(<any>promises)
         .then((results: any) => {
-            console.log(results);
             res.end();
         })
         .catch((err) => {
-            console.log(err);
         });
 };
 
@@ -76,8 +74,7 @@ export const getImagesByJob = (req: Request, res: Response, next: NextFunction) 
 export const book = (req: Request, res: Response, next: NextFunction) => {
     procedures.book(+req.body.id, +req.body.provider_id)
         .then((job) => {
-            console.log(job);
-           
+           res.end();
         });
 };
 
@@ -86,7 +83,6 @@ export const refresh = (req: Request, res: Response, next: NextFunction) => {
         .then((jobs) => {
             algoliaJobsIndex.refresh(jobs)
                 .then((ids) => {
-                    console.log('updated all jobs in algolia');
                     res.end();
                 });
         });

@@ -12,7 +12,6 @@ exports.login = (req, res, next) => {
             throw new Error('Password does not match');
         }
         req.session.userid = user.id;
-        console.log(req.session);
         delete user.password;
         res.send(user);
     });

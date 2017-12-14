@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const base_proc_1 = require("./base.proc");
-const create = (id, name, password, email, city, state, phone, bio, img) => {
-    return base_proc_1.row('spInsertUser', [id, name, password, email, city, state, phone, bio, img]);
+const create = (name, password, email, city, state, phone, bio, img) => {
+    return base_proc_1.row('spInsertUser', [name, password, email, city, state, phone, bio, img]);
 };
 const read = (id) => {
     return base_proc_1.row('spGetUser', [id]);

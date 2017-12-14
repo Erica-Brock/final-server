@@ -5,7 +5,7 @@ const user_proc_1 = require("../procedures/user.proc");
 const algolia_mw_1 = require("../middleware/algolia.mw");
 const lodash_1 = require("lodash");
 exports.create = (req, res, next) => {
-    index_1.procedure("spInsertUser", [req.body.name, req.body.password, req.body.email, req.body.city, req.body.state, req.body.phone, req.body.bio, req.body.img, req.body.index_id])
+    user_proc_1.default.create(req.body.name, req.body.password, req.body.email, req.body.city, req.body.state, req.body.phone, req.body.bio, req.body.img)
         .then((id) => {
         const userId = id[0][0].id;
         const skillIDs = req.body.skills;
@@ -35,11 +35,9 @@ exports.update = (req, res, next) => {
     ];
     Promise.all(promises)
         .then((results) => {
-        console.log(results);
         res.end();
     })
         .catch((err) => {
-        console.log(err);
     });
 };
 exports.destroy = (req, res, next) => {
@@ -91,7 +89,6 @@ exports.refresh = (req, res, next) => {
         .then((users) => {
         algolia_mw_1.algoliaUsersIndex.refresh(users)
             .then((ids) => {
-            console.log('updated all users in algolia');
             res.end();
         });
     });

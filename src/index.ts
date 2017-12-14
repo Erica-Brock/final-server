@@ -16,17 +16,13 @@ const io = socket.listen(server);
 app.use(bodyParser.json());
 
 io.on('connection', (socket) => {
-    console.log('user connected');
 
     socket.on('disconnect', function(){
-        console.log('user disconnected');
     });
 
     socket.on('add-message', (message) => {
-        console.log(message)
         procedure('spInsertMessage', [message.user_id, message.chat_id, message.message])
         .then((pack)=> {
-            console.log("Inside whatever", pack)
             io.emit('message', pack[0][0])
             socket.broadcast.emit('message', pack[0][0])
         })
@@ -41,16 +37,14 @@ io.on('connection', (socket) => {
 app.get("/api/chat/rooms/:id", (req: express.Request, res: express.Response, next: express.NextFunction) => {
     procedure("spGetChatroomsByUser", [+req.params.id] )
     .then((chatrooms: any) => {
-        res.json(chatrooms[0])
-        console.log(chatrooms[0])
+        res.json(chatrooms[0]);
     })
 })
 
 app.get("/api/chat/messages/:id", (req: express.Request, res: express.Response, next: express.NextFunction) =>{
     procedure("spGetMessagesByChatroom", [+req.params.id])
     .then((messages: any) => {
-        res.json(messages[0])
-        console.log(messages[0])
+        res.json(messages[0]);
     })
 })
 

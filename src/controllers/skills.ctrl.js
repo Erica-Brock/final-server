@@ -46,7 +46,6 @@ exports.getUserBySkills = (req, res, next) => {
 exports.insertUserSkill = (req, res, next) => {
     skills_proc_1.default.insertUserSkill(+req.params.id, +req.body.skill_id)
         .then((sets) => {
-        console.log(sets);
         res.json(sets);
     });
 };

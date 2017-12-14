@@ -13,15 +13,11 @@ const server = http_1.createServer(app);
 const io = socket.listen(server);
 app.use(bodyParser.json());
 io.on('connection', (socket) => {
-    console.log('user connected');
     socket.on('disconnect', function () {
-        console.log('user disconnected');
     });
     socket.on('add-message', (message) => {
-        console.log(message);
         index_1.procedure('spInsertMessage', [message.user_id, message.chat_id, message.message])
             .then((pack) => {
-            console.log("Inside whatever", pack);
             io.emit('message', pack[0][0]);
             socket.broadcast.emit('message', pack[0][0]);
         });
@@ -34,14 +30,12 @@ app.get("/api/chat/rooms/:id", (req, res, next) => {
     index_1.procedure("spGetChatroomsByUser", [+req.params.id])
         .then((chatrooms) => {
         res.json(chatrooms[0]);
-        console.log(chatrooms[0]);
     });
 });
 app.get("/api/chat/messages/:id", (req, res, next) => {
     index_1.procedure("spGetMessagesByChatroom", [+req.params.id])
         .then((messages) => {
         res.json(messages[0]);
-        console.log(messages[0]);
     });
 });
 app

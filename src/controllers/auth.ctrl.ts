@@ -16,8 +16,6 @@ export const login = (req: Request, res: Response, next: NextFunction) => {
 
           (<any>req).session.userid = user.id;
 
-          console.log((<any>req).session);
-
           delete user.password;
 
           res.send(user);
