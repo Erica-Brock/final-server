@@ -23,11 +23,10 @@ io.on('connection', (socket) => {
     socket.on('add-message', (message) => {
         procedure('spInsertMessage', [message.user_id, message.chat_id, message.message])
         .then((pack)=> {
-            io.emit('message', pack[0][0])
-            socket.broadcast.emit('message', pack[0][0])
-        })
-    })
-})
+            io.emit('message', pack[0][0]);
+        });
+    });
+});
 
 // I AM GOING TO IMPORT THE GETS HERE FOR THE INDEX DATABASE FOR THE INSTANT SEARCH AND ALSO FOR THE CHAT ROOM
 // AS OF NOW I DO NOT HAVE TIME TO ROUTE THEM ALL OUT AND MAKE CONTROLLERS OR PROCEDURES FOR THEM ALL 

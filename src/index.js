@@ -19,7 +19,6 @@ io.on('connection', (socket) => {
         index_1.procedure('spInsertMessage', [message.user_id, message.chat_id, message.message])
             .then((pack) => {
             io.emit('message', pack[0][0]);
-            socket.broadcast.emit('message', pack[0][0]);
         });
     });
 });
